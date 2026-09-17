@@ -1,2 +1,7 @@
 # EpiSimulated-propagation-impact
-CALCUL DE PROPAGATION D'IMPACT ET NOTIFICATION OPTIMISÉE. Notifier uniquement les personnes réellement impactées et de manière optimisée. 
+## Choix du sujet: Calcul de propagation d'impact et notification optimisée.
+
+**Objectif:**
+Notifier uniquement les personnes réellement impactées et de manière optimisée.
+
+**Choix du laguage stack:**
