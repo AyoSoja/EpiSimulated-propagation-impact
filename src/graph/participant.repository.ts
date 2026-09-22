@@ -64,7 +64,7 @@ export class ParticipantRepository {
   }
 
   update(id: string, input: UpdateParticipantInput): Participant {
-    const existing = this.getById(id); // lève ParticipantNotFoundError si absent
+    const existing = this.getById(id);
 
     if (input.email && input.email.toLowerCase() !== existing.email.toLowerCase()) {
       const emailExists = [...this.participants.values()].some(
