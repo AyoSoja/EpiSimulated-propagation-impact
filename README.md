@@ -32,3 +32,11 @@ Notifier uniquement les personnes réellement impactées et de manière optimis�
 **Tests — Jest (backend) + Flutter test framework (mobile)**
 - Jest permet de mocker facilement le temps (jest.useFakeTimers), indispensable pour tester la fenêtre de debouncing/batching sans attendre réellement les délais.
 - Couverture de code intégrée nativement, ce qui facilite la justification en soutenance de la fiabilité du calcul d'impact (BFS/DFS, cycles, cascades).
+
+## Dependances a installer
+
+**npm install**
+
+Ça va créer le dossier node_modules/ avec tous les binaires nécessaires, dont node_modules/.bin/tsc et node_modules/.bin/jest
+
+## 
