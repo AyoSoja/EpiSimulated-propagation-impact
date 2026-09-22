@@ -35,9 +35,8 @@ Notifier uniquement les personnes réellement impactées et de manière optimis�
 
 ## Dependances a installer
 
-**npm install**
-
-Ça va créer le dossier node_modules/ avec tous les binaires nécessaires, dont node_modules/.bin/tsc et node_modules/.bin/jest
+- **npm install**
+- **npm install --save-dev ts-jest @types/jest**
 
 ## Run les tests
 
