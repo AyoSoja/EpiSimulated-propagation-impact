@@ -39,4 +39,8 @@ Notifier uniquement les personnes réellement impactées et de manière optimis�
 
 Ça va créer le dossier node_modules/ avec tous les binaires nécessaires, dont node_modules/.bin/tsc et node_modules/.bin/jest
 
-## 
+## Run les tests
+
+- **npm run build**
+
+- **npm run test**
