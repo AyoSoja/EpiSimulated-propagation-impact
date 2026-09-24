@@ -118,12 +118,12 @@ export class DependencyGraph {
 
   getDependencies(id: string): string[] {
     this.getNode(id);
-    return [...(this.outgoing.get(id) ?? [])];
+    return [...this.outgoing.get(id)!];
   }
 
   getDependents(id: string): string[] {
     this.getNode(id);
-    return [...(this.incoming.get(id) ?? [])];
+    return [...this.incoming.get(id)!];
   }
 
   getAllEdges(): GraphEdge[] {

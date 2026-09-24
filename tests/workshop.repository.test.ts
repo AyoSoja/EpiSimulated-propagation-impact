@@ -37,6 +37,43 @@ describe('WorkshopRepository', () => {
     });
   });
 
+  describe('update', () => {
+    it('met à jour les champs fournis et actualise updatedAt', async () => {
+      const workshop = workshopRepo.create({
+        name: 'Atelier A',
+        startTime: new Date('2026-01-10T10:00:00'),
+        endTime: new Date('2026-01-10T12:00:00'),
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      const updated = workshopRepo.update(workshop.id, { name: 'Atelier A (renommé)' });
+
+      expect(updated.name).toBe('Atelier A (renommé)');
+      expect(updated.updatedAt.getTime()).toBeGreaterThan(workshop.updatedAt.getTime());
+    });
+
+    it('lève WorkshopNotFoundError si l\'atelier n\'existe pas', () => {
+      expect(() => workshopRepo.update('id-inexistant', { name: 'X' })).toThrow(
+        WorkshopNotFoundError,
+      );
+    });
+  });
+
+  describe('delete', () => {
+    it('supprime un atelier existant', () => {
+      const workshop = workshopRepo.create({ name: 'A', startTime: new Date(), endTime: new Date() });
+
+      workshopRepo.delete(workshop.id);
+
+      expect(() => workshopRepo.getById(workshop.id)).toThrow(WorkshopNotFoundError);
+    });
+
+    it('lève WorkshopNotFoundError si l\'atelier n\'existe pas', () => {
+      expect(() => workshopRepo.delete('id-inexistant')).toThrow(WorkshopNotFoundError);
+    });
+  });
+
   describe('getById / getAll', () => {
     it('lève WorkshopNotFoundError pour un id inconnu', () => {
       expect(() => workshopRepo.getById('id-inexistant')).toThrow(WorkshopNotFoundError);

@@ -51,6 +51,12 @@ describe('GraphPersistenceService', () => {
 
       await expect(persistence.load()).rejects.toThrow(GraphParseError);
     });
+
+    it('propage telle quelle une erreur de lecture différente d\'un fichier manquant (ex: chemin = dossier)', async () => {
+      const directoryAsPath = new GraphPersistenceService(path.dirname(tmpFilePath));
+
+      await expect(directoryAsPath.load()).rejects.not.toBeInstanceOf(GraphFileNotFoundError);
+    });
   });
 
   describe('loadOrCreate', () => {
@@ -59,6 +65,12 @@ describe('GraphPersistenceService', () => {
 
       expect(graph.getAllNodes()).toEqual([]);
       expect(graph.getAllEdges()).toEqual([]);
+    });
+
+    it('ne masque PAS une erreur autre que "fichier manquant" (ex: JSON corrompu)', async () => {
+      await fs.writeFile(tmpFilePath, '{ not valid json', 'utf-8');
+
+      await expect(persistence.loadOrCreate()).rejects.toThrow(GraphParseError);
     });
   });
 
@@ -73,7 +85,6 @@ describe('GraphPersistenceService', () => {
       await persistence.save(original);
       const restored = await persistence.load();
 
-      // comparaison profonde du graphe sérialisé, pas juste "ça ne plante pas"
       expect(restored.toJSON()).toEqual(original.toJSON());
     });
 
