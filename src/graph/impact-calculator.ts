@@ -36,6 +36,27 @@ export class ImpactCalculator {
     return visited;
   }
 
+  computeImpactedWorkshopIdsDFS(changeNodeId: string): Set<string> {
+    this.graph.getNode(changeNodeId);
+
+    const visited = new Set<string>([changeNodeId]);
+    const stack: string[] = [changeNodeId];
+
+    while (stack.length > 0) {
+      const current = stack.pop()!;
+      const dependents = this.graph.getDependents(current);
+
+      for (const dependentId of dependents) {
+        if (!visited.has(dependentId)) {
+          visited.add(dependentId);
+          stack.push(dependentId);
+        }
+      }
+    }
+
+    return visited;
+  }
+
   computeImpactedSet(changeNodeId: string): Participant[] {
     const impactedWorkshopIds = this.computeImpactedWorkshopIds(changeNodeId);
 
