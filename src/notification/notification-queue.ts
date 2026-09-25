@@ -44,8 +44,12 @@ export class NotificationQueue {
     if (!item) {
       return undefined;
     }
-    const { sequence: _sequence, ...notification } = item;
-    return notification;
+    return {
+      id: item.id,
+      urgency: item.urgency,
+      createdAt: item.createdAt,
+      payload: item.payload,
+    };
   }
 
   peek(): Notification | undefined {
@@ -53,8 +57,12 @@ export class NotificationQueue {
     if (!item) {
       return undefined;
     }
-    const { sequence: _sequence, ...notification } = item;
-    return notification;
+    return {
+      id: item.id,
+      urgency: item.urgency,
+      createdAt: item.createdAt,
+      payload: item.payload,
+    };
   }
 
   get size(): number {

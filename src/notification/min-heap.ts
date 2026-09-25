@@ -59,7 +59,7 @@ export class MinHeap<T> {
       let current = index;
       const length = this.items.length;
   
-      while (true) {
+      while (current < length) {
         const left = 2 * current + 1;
         const right = 2 * current + 2;
         let smallest = current;
@@ -71,7 +71,7 @@ export class MinHeap<T> {
           smallest = right;
         }
         if (smallest === current) {
-          break;
+          return;
         }
   
         this.swap(current, smallest);
