@@ -12,6 +12,7 @@ import { WorkshopRepository } from '../graph/workshop.repository';
 import { Notification } from '../notification/notification-queue';
 import { UrgencyLevel, getUrgencyForChangeType } from '../notification/urgency-level';
 import { CHANGE_TYPE_LABELS } from '../notification/change-type-labels';
+import { NotificationDeduplicator } from './notification-deduplicator';
 
 export interface MergedNotification extends Notification {
   participantId: string;
@@ -23,6 +24,7 @@ export class NotificationMerger {
   constructor(
     private readonly impactCalculator: ImpactCalculator,
     private readonly workshopRepository: WorkshopRepository,
+    private readonly deduplicator?: NotificationDeduplicator,
   ) {}
 
   mergeChangesIntoNotifications(changes: Change[], now: Date = new Date()): MergedNotification[] {
@@ -30,15 +32,29 @@ export class NotificationMerger {
 
     const notifications: MergedNotification[] = [];
     for (const [participantId, participantChanges] of changesByParticipant.entries()) {
+      const newChanges = this.deduplicator
+        ? participantChanges.filter((c) => !this.deduplicator!.hasBeenNotified(participantId, c.id))
+        : participantChanges;
+
+      if (newChanges.length === 0) {
+        continue;
+      }
+
       notifications.push({
         id: randomUUID(),
-        urgency: this.computeHighestUrgency(participantChanges),
+        urgency: this.computeHighestUrgency(newChanges),
         createdAt: now,
         participantId,
-        changes: participantChanges,
-        message: this.formatMessage(participantChanges),
-        payload: { changeIds: participantChanges.map((c) => c.id) },
+        changes: newChanges,
+        message: this.formatMessage(newChanges),
+        payload: { changeIds: newChanges.map((c) => c.id) },
       });
+
+      if (this.deduplicator) {
+        for (const change of newChanges) {
+          this.deduplicator.markAsNotified(participantId, change.id);
+        }
+      }
     }
 
     return notifications;

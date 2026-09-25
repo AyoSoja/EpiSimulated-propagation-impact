@@ -433,3 +433,6 @@ app.json
 appearance.json
 core-plugins.json
 workspace.json
+
+# coverage test
+coverage/
