@@ -9,6 +9,7 @@ import { ChangeType } from './change-type';
 
 export const CHANGE_TYPE_LABELS: Readonly<Record<ChangeType, string>> = {
   [ChangeType.CANCELLATION]: 'Annulation',
+  [ChangeType.RESTORATION]: 'Rétablissement (annulation précédente levée)',
   [ChangeType.ROOM_CHANGE]: 'Changement de salle',
   [ChangeType.SCHEDULE_CHANGE_MAJOR]: "Changement d'horaire important",
   [ChangeType.SCHEDULE_CHANGE_MINOR]: "Changement d'horaire mineur",

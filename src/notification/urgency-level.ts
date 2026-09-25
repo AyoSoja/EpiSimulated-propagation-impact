@@ -16,6 +16,7 @@ export enum UrgencyLevel {
 
 export const CHANGE_TYPE_URGENCY_MAP: Readonly<Record<ChangeType, UrgencyLevel>> = {
   [ChangeType.CANCELLATION]: UrgencyLevel.CRITICAL,
+  [ChangeType.RESTORATION]: UrgencyLevel.HIGH,
   [ChangeType.ROOM_CHANGE]: UrgencyLevel.HIGH,
   [ChangeType.SCHEDULE_CHANGE_MAJOR]: UrgencyLevel.HIGH,
   [ChangeType.SCHEDULE_CHANGE_MINOR]: UrgencyLevel.MEDIUM,
