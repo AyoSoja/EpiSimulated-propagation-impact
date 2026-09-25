@@ -44,12 +44,9 @@ export class NotificationQueue {
     if (!item) {
       return undefined;
     }
-    return {
-      id: item.id,
-      urgency: item.urgency,
-      createdAt: item.createdAt,
-      payload: item.payload,
-    };
+    const { sequence, ...notification } = item;
+    void sequence;
+    return notification;
   }
 
   peek(): Notification | undefined {
@@ -57,12 +54,9 @@ export class NotificationQueue {
     if (!item) {
       return undefined;
     }
-    return {
-      id: item.id,
-      urgency: item.urgency,
-      createdAt: item.createdAt,
-      payload: item.payload,
-    };
+    const { sequence, ...notification } = item;
+    void sequence;
+    return notification;
   }
 
   get size(): number {
