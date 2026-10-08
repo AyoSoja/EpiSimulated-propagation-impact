@@ -110,6 +110,25 @@ Episimulated-Propagation-Impact
     |__scripts/
     |   |__benchmark-bfs-dfs.ts
     |
+    |__frontend/
+    |   |__components/
+    |   |   |__ChangeForm.tsx
+    |   |   |__WorkshopList.tsx
+    |   |
+    |   |__src/
+    |   |   |__App.tsx
+    |   |   |__backend.ts
+    |   |   |__index.css
+    |   |   |__main.tsx
+    |   |
+    |   |__index.css
+    |   |__index.html
+    |   |__package-lock.json
+    |   |__package.json
+    |   |__tsconfig.json
+    |   |__tsconfig.tsbuildinfo
+    |   |__vite.config.ts
+    |
     |__src/
     |   |__api
     |   |__batching
