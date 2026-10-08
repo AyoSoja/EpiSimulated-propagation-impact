@@ -111,11 +111,11 @@ Episimulated-Propagation-Impact
     |   |__benchmark-bfs-dfs.ts
     |
     |__frontend/
-    |   |__components/
-    |   |   |__ChangeForm.tsx
-    |   |   |__WorkshopList.tsx
-    |   |
     |   |__src/
+    |   |   |__components/
+    |   |   |   |__ChangeForm.tsx
+    |   |   |   |__WorkshopList.tsx
+    |   |   |
     |   |   |__App.tsx
     |   |   |__backend.ts
     |   |   |__index.css

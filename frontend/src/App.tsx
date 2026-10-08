@@ -7,9 +7,13 @@
 
 import { useMemo, useState } from 'react';
 import { createBackend } from './backend';
+import WorkshopList from './components/WorkshopList';
+import ChangeForm from './components/ChangeForm';
 import type { Workshop } from '@backend/graph/workshop';
 
 function App() {
+  // useMemo : le backend n'est construit qu'une seule fois par session de
+  // l'app, pas à chaque re-render. Partagé entre tous les composants ci-dessous.
   const backend = useMemo(() => createBackend(), []);
   const [workshops] = useState<Workshop[]>(() => backend.workshopRepository.getAll());
 
@@ -21,20 +25,9 @@ function App() {
         <code>DependencyGraph</code>, <code>NotificationPipeline</code>) — aucune API intermédiaire.
       </p>
 
-      {workshops.length === 0 ? (
-        <p>Aucun atelier pour le moment.</p>
-      ) : (
-        <ul className="workshop-list">
-          {workshops.map((workshop) => (
-            <li key={workshop.id} className="workshop-item">
-              <strong>{workshop.name}</strong>
-              <span className="workshop-meta">
-                {workshop.participantIds.length} participant(s) inscrit(s)
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <WorkshopList workshops={workshops} />
+
+      <ChangeForm backend={backend} workshops={workshops} />
     </main>
   );
 }
