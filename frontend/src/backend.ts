@@ -17,7 +17,7 @@ import { NotificationQueue } from '@backend/notification/notification-queue';
 import { RateLimiter } from '@backend/notification/rate-limiter';
 import { MockNotificationProvider } from '@backend/notification/mock-notification-provider';
 import { NotificationDispatcher } from '@backend/notification/notification-dispatcher';
-import { NotificationPipeline } from '@backend/pipeline/notification-pipeline';
+import { NotificationPipeline } from '@backend/notification/notification-pipeline';
 
 export interface Backend {
   participantRepository: ParticipantRepository;
