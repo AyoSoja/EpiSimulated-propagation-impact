@@ -5,7 +5,6 @@
 ** notification-merger.ts
 */
 
-import { randomUUID } from 'crypto';
 import { Change } from './change';
 import { ImpactCalculator } from '../graph/impact-calculator';
 import { WorkshopRepository } from '../graph/workshop.repository';
@@ -41,7 +40,7 @@ export class NotificationMerger {
       }
 
       notifications.push({
-        id: randomUUID(),
+        id: crypto.randomUUID(),
         urgency: this.computeHighestUrgency(newChanges),
         createdAt: now,
         participantId,

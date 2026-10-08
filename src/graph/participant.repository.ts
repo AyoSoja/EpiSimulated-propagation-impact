@@ -5,12 +5,11 @@
 ** participant.repository.ts
 */
 
-import { randomUUID } from 'crypto';
 import {
-    Participant,
-    CreateParticipantInput,
-    UpdateParticipantInput,
-  } from './participant';
+  Participant,
+  CreateParticipantInput,
+  UpdateParticipantInput,
+} from './participant';
 
 export class ParticipantNotFoundError extends Error {
   constructor(id: string) {
@@ -39,7 +38,7 @@ export class ParticipantRepository {
 
     const now = new Date();
     const participant: Participant = {
-      id: randomUUID(),
+      id: crypto.randomUUID(),
       firstName: input.firstName,
       lastName: input.lastName,
       email: input.email,

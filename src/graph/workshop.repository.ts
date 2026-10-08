@@ -5,7 +5,6 @@
 ** workshop.repository.ts
 */
 
-import { randomUUID } from 'crypto';
 import { Workshop, CreateWorkshopInput, UpdateWorkshopInput } from './workshop';
 import { Participant } from './participant';
 import { ParticipantRepository } from './participant.repository';
@@ -33,13 +32,12 @@ export class ParticipantNotEnrolledError extends Error {
 
 export class WorkshopRepository {
   private workshops: Map<string, Workshop> = new Map();
-
   constructor(private readonly participantRepository: ParticipantRepository) {}
 
   create(input: CreateWorkshopInput): Workshop {
     const now = new Date();
     const workshop: Workshop = {
-      id: randomUUID(),
+      id: crypto.randomUUID(),
       name: input.name,
       startTime: input.startTime,
       endTime: input.endTime,
@@ -84,6 +82,7 @@ export class WorkshopRepository {
     this.workshops.delete(id);
   }
 
+
   enrollParticipant(workshopId: string, participantId: string): Workshop {
     const workshop = this.getById(workshopId);
 
@@ -119,7 +118,6 @@ export class WorkshopRepository {
     this.workshops.set(workshopId, updated);
     return updated;
   }
-
 
   getParticipantsOfWorkshop(workshopId: string): Participant[] {
     const workshop = this.getById(workshopId);
