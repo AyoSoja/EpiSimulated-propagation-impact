@@ -41,7 +41,7 @@ describe('NotificationQueue', () => {
     const queue = new NotificationQueue();
     const t0 = new Date('2026-01-10T10:00:00.000Z');
     queue.enqueue(makeNotification('first', UrgencyLevel.HIGH, t0));
-    queue.enqueue(makeNotification('second', UrgencyLevel.HIGH, t0));
+    queue.enqueue(makeNotification('second', UrgencyLevel.HIGH, t0)); // même timestamp exact
     queue.enqueue(makeNotification('third', UrgencyLevel.HIGH, t0));
 
     expect(queue.dequeue()?.id).toBe('first');
@@ -53,6 +53,7 @@ describe('NotificationQueue', () => {
     const queue = new NotificationQueue();
     const earlier = new Date('2026-01-10T09:00:00.000Z');
     const later = new Date('2026-01-10T10:00:00.000Z');
+    // enfilées dans l'ordre inverse de leur timestamp, pour bien tester le tri par createdAt
     queue.enqueue(makeNotification('later', UrgencyLevel.HIGH, later));
     queue.enqueue(makeNotification('earlier', UrgencyLevel.HIGH, earlier));
 
@@ -69,7 +70,7 @@ describe('NotificationQueue', () => {
     const queue = new NotificationQueue();
     queue.enqueue(makeNotification('info-1', UrgencyLevel.LOW));
     queue.enqueue(makeNotification('info-2', UrgencyLevel.LOW));
-    queue.enqueue(makeNotification('cancellation', UrgencyLevel.CRITICAL));
+    queue.enqueue(makeNotification('cancellation', UrgencyLevel.CRITICAL)); // arrive en dernier, sort en premier
 
     expect(queue.dequeue()?.id).toBe('cancellation');
   });
@@ -79,7 +80,7 @@ describe('NotificationQueue', () => {
     queue.enqueue(makeNotification('a', UrgencyLevel.MEDIUM));
 
     expect(queue.peek()?.id).toBe('a');
-    expect(queue.size).toBe(1);
+    expect(queue.size).toBe(1); // toujours dans la file
   });
 
   it('size et isEmpty reflètent correctement l\'état de la file', () => {
@@ -95,6 +96,33 @@ describe('NotificationQueue', () => {
 
     expect(queue.size).toBe(0);
     expect(queue.isEmpty()).toBe(true);
+  });
+
+  describe('getPending()', () => {
+    it('retourne un tableau vide pour une file vide', () => {
+      expect(new NotificationQueue().getPending()).toEqual([]);
+    });
+
+    it('liste les notifications dans l\'ordre exact de sortie, sans modifier la file', () => {
+      const queue = new NotificationQueue();
+      queue.enqueue(makeNotification('low', UrgencyLevel.LOW));
+      queue.enqueue(makeNotification('critical', UrgencyLevel.CRITICAL));
+      queue.enqueue(makeNotification('high', UrgencyLevel.HIGH));
+
+      const pendingIds = queue.getPending().map((n) => n.id);
+
+      expect(pendingIds).toEqual(['critical', 'high', 'low']);
+      expect(queue.size).toBe(3); // rien n'a été retiré
+      expect(queue.dequeue()?.id).toBe('critical'); // même ordre qu'au dépilage réel
+    });
+
+    it('conserve les champs additionnels d\'un type qui étend Notification', () => {
+      const queue = new NotificationQueue();
+      const extended = { ...makeNotification('m1', UrgencyLevel.HIGH), participantId: 'p1', message: 'hello' };
+      queue.enqueue(extended);
+
+      expect(queue.getPending()[0]).toEqual(extended); // et sans champ "sequence"
+    });
   });
 
   it('scénario réaliste : cascade de changements mixtes traités dans le bon ordre', () => {

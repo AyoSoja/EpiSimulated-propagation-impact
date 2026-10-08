@@ -9,7 +9,7 @@ import { ChangeDebouncer } from '../batching/change-debouncer';
 import { ChangeReconciler } from '../batching/change-reconciler';
 import { NotificationMerger } from '../batching/notification-merger';
 import { Change } from '../batching/change';
-import { NotificationQueue } from '../notification/notification-queue';
+import { NotificationQueue, Notification } from '../notification/notification-queue';
 import { NotificationDispatcher } from '../notification/notification-dispatcher';
 
 export class NotificationPipeline {
@@ -44,5 +44,13 @@ export class NotificationPipeline {
 
   get pendingQueueSize(): number {
     return this.queue.size;
+  }
+
+  get pendingChangeCount(): number {
+    return this.debouncer.getPendingCount();
+  }
+
+  getPendingNotifications(): Notification[] {
+    return this.queue.getPending();
   }
 }
