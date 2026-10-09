@@ -19,21 +19,25 @@ interface QueuedNotification extends Notification {
   sequence: number;
 }
 
-export class NotificationQueue {
-  private readonly heap: MinHeap<QueuedNotification>;
-  private sequenceCounter = 0;
-
-  constructor() {
-    this.heap = new MinHeap<QueuedNotification>((a, b) => {
-      if (a.urgency !== b.urgency) {
-        return a.urgency - b.urgency;
-      }
-      if (a.createdAt.getTime() !== b.createdAt.getTime()) {
-        return a.createdAt.getTime() - b.createdAt.getTime();
-      }
-      return a.sequence - b.sequence;
-    });
+function compareQueued(a: QueuedNotification, b: QueuedNotification): number {
+  if (a.urgency !== b.urgency) {
+    return a.urgency - b.urgency;
   }
+  if (a.createdAt.getTime() !== b.createdAt.getTime()) {
+    return a.createdAt.getTime() - b.createdAt.getTime();
+  }
+  return a.sequence - b.sequence;
+}
+
+function toPublicNotification(item: QueuedNotification): Notification {
+  const { sequence, ...notification } = item;
+  void sequence;
+  return notification;
+}
+
+export class NotificationQueue {
+  private readonly heap = new MinHeap<QueuedNotification>(compareQueued);
+  private sequenceCounter = 0;
 
   enqueue(notification: Notification): void {
     this.heap.push({ ...notification, sequence: this.sequenceCounter++ });
@@ -41,22 +45,16 @@ export class NotificationQueue {
 
   dequeue(): Notification | undefined {
     const item = this.heap.pop();
-    if (!item) {
-      return undefined;
-    }
-    const { sequence, ...notification } = item;
-    void sequence;
-    return notification;
+    return item ? toPublicNotification(item) : undefined;
   }
 
   peek(): Notification | undefined {
     const item = this.heap.peek();
-    if (!item) {
-      return undefined;
-    }
-    const { sequence, ...notification } = item;
-    void sequence;
-    return notification;
+    return item ? toPublicNotification(item) : undefined;
+  }
+
+  getPending(): Notification[] {
+    return this.heap.toArray().sort(compareQueued).map(toPublicNotification);
   }
 
   get size(): number {

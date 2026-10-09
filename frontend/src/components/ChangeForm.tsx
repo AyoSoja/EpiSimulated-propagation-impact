@@ -15,6 +15,8 @@ import type { Workshop } from '@backend/graph/workshop';
 interface ChangeFormProps {
   backend: Backend;
   workshops: Workshop[];
+  // Appelé après un enregistrement réussi, pour rafraîchir le reste de l'interface.
+  onChangeRecorded?: () => void;
 }
 
 type SubmitState =
@@ -24,7 +26,7 @@ type SubmitState =
 
 const CHANGE_TYPE_OPTIONS = Object.values(ChangeType);
 
-function ChangeForm({ backend, workshops }: ChangeFormProps) {
+function ChangeForm({ backend, workshops, onChangeRecorded }: ChangeFormProps) {
   const [workshopId, setWorkshopId] = useState(workshops[0]?.id ?? '');
   const [changeType, setChangeType] = useState<ChangeType>(ChangeType.GENERAL_INFO);
   const [description, setDescription] = useState('');
@@ -64,6 +66,7 @@ function ChangeForm({ backend, workshops }: ChangeFormProps) {
         message: `Changement "${CHANGE_TYPE_LABELS[changeType]}" enregistré pour "${workshopName}".`,
       });
       setDescription('');
+      onChangeRecorded?.();
     } catch (error) {
       setSubmitState({
         status: 'error',

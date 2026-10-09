@@ -5,17 +5,24 @@
 ** App.tsx
 */
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { createBackend } from './backend';
 import WorkshopList from './components/WorkshopList';
 import ChangeForm from './components/ChangeForm';
+import ImpactDashboard from './components/ImpactDashboard';
 import type { Workshop } from '@backend/graph/workshop';
 
 function App() {
   // useMemo : le backend n'est construit qu'une seule fois par session de
-  // l'app, pas à chaque re-render. Partagé entre tous les composants ci-dessous.
+  // l'app. Il est partagé entre TOUS les composants ci-dessous : le formulaire
+  // y écrit, le dashboard le lit.
   const backend = useMemo(() => createBackend(), []);
   const [workshops] = useState<Workshop[]>(() => backend.workshopRepository.getAll());
+
+  // Le backend est un objet mutable hors de React : ce compteur sert uniquement
+  // à forcer un re-rendu quand son état a changé.
+  const [, setTick] = useState(0);
+  const refresh = useCallback(() => setTick((tick) => tick + 1), []);
 
   return (
     <main className="page">
@@ -27,7 +34,9 @@ function App() {
 
       <WorkshopList workshops={workshops} />
 
-      <ChangeForm backend={backend} workshops={workshops} />
+      <ChangeForm backend={backend} workshops={workshops} onChangeRecorded={refresh} />
+
+      <ImpactDashboard backend={backend} onStateChange={refresh} />
     </main>
   );
 }

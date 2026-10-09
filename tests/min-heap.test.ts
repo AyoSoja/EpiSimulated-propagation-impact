@@ -36,7 +36,7 @@ describe('MinHeap', () => {
     heap.push(1);
 
     expect(heap.peek()).toBe(1);
-    expect(heap.size).toBe(2);
+    expect(heap.size).toBe(2); // toujours présent
   });
 
   it('gère les doublons correctement', () => {
@@ -61,6 +61,18 @@ describe('MinHeap', () => {
     }
 
     expect(output).toEqual([8, 5, 2, 1]);
+  });
+
+  it('toArray() retourne une copie des éléments sans modifier le tas', () => {
+    const heap = numericHeap();
+    [3, 1, 2].forEach((n) => heap.push(n));
+
+    const snapshot = heap.toArray();
+    snapshot.push(99); // modifier la copie ne doit pas affecter le tas
+
+    expect([...heap.toArray()].sort((a, b) => a - b)).toEqual([1, 2, 3]);
+    expect(heap.size).toBe(3);
+    expect(heap.peek()).toBe(1);
   });
 
   it('reste cohérent sur un grand nombre d\'éléments aléatoires', () => {
